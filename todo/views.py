@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 
 
 def signupuser(request):
+    # I think default is a GET
     if request.method == "GET":
         return render(request, "todo/signupuser.html", {'form': UserCreationForm()})
     else:  # We know it is a post
