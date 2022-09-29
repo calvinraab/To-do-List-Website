@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 
+''' potential fix: https://stackoverflow.com/questions/48448563/my-password-is-stored-inside-the-email-field-in-django-admin'''
+
 
 def signupuser(request):
     if request.method == "GET":
@@ -15,7 +17,7 @@ def signupuser(request):
         if request.POST['password1'] == request.POST['password2']:
             # Create a new user
             user = User.objects.create_user(
-                request.POST['username'], request.POST['password1'])
+                username=request.POST['username'], password=request.POST['password1'])
             user.save()  # This inserts it into the database
         else:
             print('Hello')
