@@ -22,4 +22,4 @@ def signupuser(request):
             user.save()  # This inserts it into the database
         else:
             print('Hello')
-            # Tell the user that the passwords did nto match
+            # Tell the user that the passwords did not match
