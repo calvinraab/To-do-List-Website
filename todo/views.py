@@ -24,7 +24,6 @@ def signupuser(request):
                     username=request.POST['username'], password=request.POST['password1'])
                 user.save()  # This inserts it into the database
             # This is the error you get if a username already exists that you are trying.
-
                 # After creating an account this keeps the user logged in.
                 login(request, user)
                 return redirect('currenttodos')
