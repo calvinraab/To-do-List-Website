@@ -27,6 +27,7 @@ def signupuser(request):
 
                 # After creating an account this keeps the user logged in.
                 login(request, user)
+                # And we redirect them to currenttodos
                 return redirect('currenttodos')
             except IntegrityError:
                 return render(request, "todo/signupuser.html", {'form': UserCreationForm(), 'error': 'That username has already been taken. Please choose a new username.'})
