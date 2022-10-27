@@ -23,12 +23,11 @@ def signupuser(request):
                 user = User.objects.create_user(
                     username=request.POST['username'], password=request.POST['password1'])
                 user.save()  # This inserts it into the database
-            # This is the error you get if a username already exists that you are trying.
-
                 # After creating an account this keeps the user logged in.
                 login(request, user)
                 # And we redirect them to currenttodos
                 return redirect('currenttodos')
+            # This is the error you get if a username already exists that you are trying.
             except IntegrityError:
                 return render(request, "todo/signupuser.html", {'form': UserCreationForm(), 'error': 'That username has already been taken. Please choose a new username.'})
 
