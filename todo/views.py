@@ -41,7 +41,7 @@ def signupuser(request):
 
 
 def logoutuser(request):
-    if request.method == 'POST':  # We only want to log people out if it is a post, default in html is going to be a GET that would log us out when we open teh page because Chrome starts running all of teh GET functions
+    if request.method == 'POST':  # We only want to log people out if it is a post, default in html is going to be a GET that would log us out when we open teh page because Chrome starts running all of the GET functions
         logout(request)
         return redirect('home')
 
