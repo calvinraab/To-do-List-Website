@@ -15,6 +15,9 @@ password: thisisadamspassword123!
 User: Test
 Password: Letstestthispassword!
 
+user: jack
+Password: jack
+
 To figure out:
 
-Video I left off on: 67
+Video I left off on: 69

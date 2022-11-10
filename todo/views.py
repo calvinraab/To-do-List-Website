@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
+from .forms import Todoform
 
 # Create your views here.
 
@@ -41,7 +42,6 @@ def signupuser(request):
 
 
 def loginuser(request):
-    # I think default is a GET
     if request.method == "GET":
         return render(request, "todo/loginuser.html", {'form': AuthenticationForm()})
     else:
@@ -59,6 +59,23 @@ def logoutuser(request):
     if request.method == 'POST':  # We only want to log people out if it is a post, default in html is going to be a GET that would log us out when we open teh page because Chrome starts running all of the GET functions
         logout(request)
         return redirect('home')
+
+
+def createtodo(request):
+    if request.method == 'GET':
+        return render(request, "todo/createtodo.html", {'form': Todoform()})
+    else:  # Someone has posted some information to our view
+        # We have to get information from our post request to our form
+        # Any info it gets it puts into this form
+        try:
+            form = Todoform(request.POST)
+            # create a new Todo object and don't put it in DB yet, we need to specify the user
+            newtodo = form.save(commit=False)
+            newtodo.user = request.user
+            newtodo.save()
+            return redirect('currenttodos')
+        except ValueError:
+            return render(request, "todo/createtodo.html", {'form': Todoform(), 'error': 'Bad data passed in. Try again.'})
 
 
 def currenttodos(request):
