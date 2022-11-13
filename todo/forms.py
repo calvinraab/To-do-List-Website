@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from .models import Todo
 
+
 # User creation and authentication form were forms by Django, I am now going to make my own form
 
 
