@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from .forms import Todoform
+from .models import Todo
 
 # Create your views here.
 
@@ -79,4 +80,7 @@ def createtodo(request):
 
 
 def currenttodos(request):
-    return render(request, 'todo/currenttodos.html')
+    # Need to get the todos from database
+    # the __isnull is a special django naming convention that can check if a value is null
+    todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    return render(request, 'todo/currenttodos.html', {'todos': todos})
