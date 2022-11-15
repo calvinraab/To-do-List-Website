@@ -20,4 +20,4 @@ Password: jack
 
 To figure out:
 
-Video I left off on: 69
+Video I left off on: 70
