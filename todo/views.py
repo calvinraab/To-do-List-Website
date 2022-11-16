@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 # Django forms is  whole topic within itself
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # Helps us create user objects really quickly
@@ -8,6 +8,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from .forms import Todoform
 from .models import Todo
+from django.utils import timezone
 
 # Create your views here.
 
@@ -84,3 +85,36 @@ def currenttodos(request):
     # the __isnull is a special django naming convention that can check if a value is null
     todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
     return render(request, 'todo/currenttodos.html', {'todos': todos})
+
+
+def viewtodo(request, todo_pk):
+    # We are asking django to lok in the database for a todo that matches that primary key and the users match.
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+
+    if request.method == "GET":
+        # This form we created from a model. We can pass in an object of that model and it will fill everything out.
+        form = Todoform(instance=todo)
+        return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form})
+    else:  # If it's a post that means the user is 'posting' it.
+        try:
+            # Adding the instance lets the program know that this exists and we are trying to do an update
+            form = Todoform(request.POST, instance=todo)
+            form.save()
+            return redirect('currenttodos')
+        except ValueError:
+            return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form, 'error': 'Bad Info'})
+
+
+def completetodo(request, todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == "POST":
+        todo.datecompleted = timezone.now()
+        todo.save()
+        return redirect('currenttodos')
+
+
+def deletetodo(request, todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == "POST":
+        todo.delete()
+        return redirect('currenttodos')
