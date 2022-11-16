@@ -9,6 +9,8 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import Todoform
 from .models import Todo
 from django.utils import timezone
+# Anytime we put this before the name of a function we can only access that page if we are logged in
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -57,12 +59,14 @@ def loginuser(request):
             return redirect('currenttodos')
 
 
+@login_required
 def logoutuser(request):
     if request.method == 'POST':  # We only want to log people out if it is a post, default in html is going to be a GET that would log us out when we open teh page because Chrome starts running all of the GET functions
         logout(request)
         return redirect('home')
 
 
+@login_required
 def createtodo(request):
     if request.method == 'GET':
         return render(request, "todo/createtodo.html", {'form': Todoform()})
@@ -80,6 +84,7 @@ def createtodo(request):
             return render(request, "todo/createtodo.html", {'form': Todoform(), 'error': 'Bad data passed in. Try again.'})
 
 
+@login_required
 def currenttodos(request):
     # Need to get the todos from database
     # the __isnull is a special django naming convention that can check if a value is null
@@ -87,6 +92,16 @@ def currenttodos(request):
     return render(request, 'todo/currenttodos.html', {'todos': todos})
 
 
+@login_required
+def completedtodos(request):
+    # Need to get the todos from database
+    # the __isnull is a special django naming convention that can check if a value is null
+    todos = Todo.objects.filter(
+        user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
+    return render(request, 'todo/completedtodos.html', {'todos': todos})
+
+
+@login_required
 def viewtodo(request, todo_pk):
     # We are asking django to lok in the database for a todo that matches that primary key and the users match.
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
@@ -105,6 +120,7 @@ def viewtodo(request, todo_pk):
             return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form, 'error': 'Bad Info'})
 
 
+@login_required
 def completetodo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == "POST":
@@ -113,6 +129,7 @@ def completetodo(request, todo_pk):
         return redirect('currenttodos')
 
 
+@login_required
 def deletetodo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == "POST":
