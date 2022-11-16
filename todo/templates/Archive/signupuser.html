@@ -1,0 +1,16 @@
+{% extends 'todo/base.html' %}
+
+{% block content %}
+
+<h1>Sign Up</h1>
+
+<h2>{{ error }}</h2>
+
+<!-- The big difference between a GET and a POST is that the POST doesn't put any information up in the URL. A get is if you are displaying information, a post means you are going to create something or take some sort of action. ANytime you just type in a URL and select enter, that is a GET  -->
+<form method="POST">
+    {% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Sign Up</button>
+</form>
+
+{% endblock %}
